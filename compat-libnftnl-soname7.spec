@@ -4,7 +4,7 @@
 #
 Name     : compat-libnftnl-soname7
 Version  : 1.1.1
-Release  : 1
+Release  : 2
 URL      : http://netfilter.org/projects/libnftnl/files/libnftnl-1.1.1.tar.bz2
 Source0  : http://netfilter.org/projects/libnftnl/files/libnftnl-1.1.1.tar.bz2
 Summary  : Netfilter nf_tables infrastructure library
