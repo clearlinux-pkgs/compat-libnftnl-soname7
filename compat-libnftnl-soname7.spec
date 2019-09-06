@@ -4,7 +4,7 @@
 #
 Name     : compat-libnftnl-soname7
 Version  : 1.1.1
-Release  : 2
+Release  : 3
 URL      : http://netfilter.org/projects/libnftnl/files/libnftnl-1.1.1.tar.bz2
 Source0  : http://netfilter.org/projects/libnftnl/files/libnftnl-1.1.1.tar.bz2
 Summary  : Netfilter nf_tables infrastructure library
@@ -13,19 +13,11 @@ License  : GPL-2.0
 Requires: compat-libnftnl-soname7-lib = %{version}-%{release}
 Requires: compat-libnftnl-soname7-license = %{version}-%{release}
 BuildRequires : pkgconfig(libmnl)
+# Suppress generation of debuginfo
+%global debug_package %{nil}
 
 %description
 No detailed description available
-
-%package dev
-Summary: dev components for the compat-libnftnl-soname7 package.
-Group: Development
-Requires: compat-libnftnl-soname7-lib = %{version}-%{release}
-Provides: compat-libnftnl-soname7-devel = %{version}-%{release}
-
-%description dev
-dev components for the compat-libnftnl-soname7 package.
-
 
 %package lib
 Summary: lib components for the compat-libnftnl-soname7 package.
@@ -51,45 +43,51 @@ license components for the compat-libnftnl-soname7 package.
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1545404175
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1567813602
+export GCC_IGNORE_WERROR=1
+export AR=gcc-ar
+export RANLIB=gcc-ranlib
+export NM=gcc-nm
+export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FCFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
 %configure --disable-static
 make  %{?_smp_mflags}
 
 %check
-export LANG=C
+export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1545404175
+export SOURCE_DATE_EPOCH=1567813602
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/compat-libnftnl-soname7
 cp COPYING %{buildroot}/usr/share/package-licenses/compat-libnftnl-soname7/COPYING
 %make_install
+## Remove excluded files
+rm -f %{buildroot}/usr/include/libnftnl/batch.h
+rm -f %{buildroot}/usr/include/libnftnl/chain.h
+rm -f %{buildroot}/usr/include/libnftnl/common.h
+rm -f %{buildroot}/usr/include/libnftnl/expr.h
+rm -f %{buildroot}/usr/include/libnftnl/flowtable.h
+rm -f %{buildroot}/usr/include/libnftnl/gen.h
+rm -f %{buildroot}/usr/include/libnftnl/object.h
+rm -f %{buildroot}/usr/include/libnftnl/rule.h
+rm -f %{buildroot}/usr/include/libnftnl/ruleset.h
+rm -f %{buildroot}/usr/include/libnftnl/set.h
+rm -f %{buildroot}/usr/include/libnftnl/table.h
+rm -f %{buildroot}/usr/include/libnftnl/trace.h
+rm -f %{buildroot}/usr/include/libnftnl/udata.h
+rm -f %{buildroot}/usr/lib64/libnftnl.so
+rm -f %{buildroot}/usr/lib64/pkgconfig/libnftnl.pc
 
 %files
 %defattr(-,root,root,-)
-
-%files dev
-%defattr(-,root,root,-)
-%exclude /usr/include/libnftnl/batch.h
-%exclude /usr/include/libnftnl/chain.h
-%exclude /usr/include/libnftnl/common.h
-%exclude /usr/include/libnftnl/expr.h
-%exclude /usr/include/libnftnl/flowtable.h
-%exclude /usr/include/libnftnl/gen.h
-%exclude /usr/include/libnftnl/object.h
-%exclude /usr/include/libnftnl/rule.h
-%exclude /usr/include/libnftnl/ruleset.h
-%exclude /usr/include/libnftnl/set.h
-%exclude /usr/include/libnftnl/table.h
-%exclude /usr/include/libnftnl/trace.h
-%exclude /usr/include/libnftnl/udata.h
-%exclude /usr/lib64/libnftnl.so
-%exclude /usr/lib64/pkgconfig/libnftnl.pc
 
 %files lib
 %defattr(-,root,root,-)
@@ -98,4 +96,4 @@ cp COPYING %{buildroot}/usr/share/package-licenses/compat-libnftnl-soname7/COPYI
 
 %files license
 %defattr(0644,root,root,0755)
-%exclude /usr/share/package-licenses/compat-libnftnl-soname7/COPYING
+/usr/share/package-licenses/compat-libnftnl-soname7/COPYING
